@@ -18,13 +18,13 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 # ======================================== INSTALL DEPENDENCIES
 RUN apk update
 RUN apk add libpng libpng-dev libjpeg-turbo-dev libwebp-dev zlib-dev libxpm-dev gd libzip-dev gmp gmp-dev \
-    postgresql-dev # Adiciona o pacote de desenvolvimento do PostgreSQL
+    postgresql-dev sqlite sqlite-dev # Adiciona o pacote de desenvolvimento do PostgreSQL e SQLite
 
 RUN apk add jpeg-dev libpng-dev \
     && docker-php-ext-configure gd --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd
 RUN docker-php-ext-install zip
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql pdo_sqlite
 RUN docker-php-ext-install bcmath gmp
 
 # ======================================== SET USER
@@ -41,6 +41,7 @@ COPY --chown=application resources resources/
 COPY --chown=application routes routes/
 COPY --chown=application storage storage/
 COPY --chown=application tests tests/
+COPY --chown=application db.db /app/db.db
 
 # ======================================== INSTALL COMPOSER DEPENDENCIES
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
