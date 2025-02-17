@@ -1,0 +1,17 @@
+services:
+    app:
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+        ports:
+            - "8000:80"
+        env_file:
+            - .env
+        volumes:
+            - ./:/app/
+            - ./vendor:/app/vendor
+        networks:
+            - ai_network
+
+networks:
+    ai_network:
